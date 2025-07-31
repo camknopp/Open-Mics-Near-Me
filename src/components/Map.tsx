@@ -40,7 +40,7 @@ function LocationMarkerAndCircle({
     <>
       <Circle 
         center={position} 
-        pathOptions={{ fillColor: 'blue', color: 'blue', weight: 2, opacity: 0.5, fillOpacity: 0.2 }} 
+        pathOptions={{ fillColor: 'none', color: 'red', weight: 4, opacity: 1, fillOpacity: 0.0 }} 
         radius={radiusInMeters} 
       />
       <Marker position={position} />

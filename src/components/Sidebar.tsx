@@ -55,7 +55,7 @@ const Sidebar = ({ isOpen, onToggle, radius, setRadius }: SidebarProps) => {
           <input
             id="radius-slider"
             type="range"
-            min="0"
+            min="1"
             max="100"
             value={radius}
             onChange={(e) => setRadius(parseInt(e.target.value, 10))}

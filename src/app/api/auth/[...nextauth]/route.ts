@@ -9,10 +9,6 @@ export const authOptions: AuthOptions = {
 
   // 2. Providers: Defines which authentication methods are available
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    })
   ],
 
   // 3. Session Strategy: How session data is stored and managed
