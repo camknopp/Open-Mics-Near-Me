@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
 
 const LazyMap = dynamic(() => import("@/components/Map"), {
@@ -10,14 +10,13 @@ const LazyMap = dynamic(() => import("@/components/Map"), {
 });
 
 export default function Home() {
-  const defaultPosition: [number, number] = [40.7128, -74.0060];
+  const defaultPosition: [number, number] = [40.7128, -74.006];
   const [position, setPosition] = useState<[number, number]>(defaultPosition);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [radius, setRadius] = useState(2); 
+  const [radius, setRadius] = useState(2);
   const zoom = 13;
-
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -52,9 +51,31 @@ export default function Home() {
       {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 60000
+        maximumAge: 60000,
       }
     );
+  }, []);
+
+  const handleSearchSubmit = useCallback(async (query: string) => {
+    setError(null);
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        const { lat, lon } = data[0];
+        const newPosition: [number, number] = [parseFloat(lat), parseFloat(lon)];
+        setPosition(newPosition);
+        // Do not update the `initialPosition` prop of the map here.
+        // Instead, the `LocationMarkerAndCircle` component should react to the `position` state.
+      } else {
+        setError(`No results found for "${query}". Using current location.`);
+      }
+    } catch (err) {
+      console.error("Geocoding error:", err);
+      setError("Failed to get location from search. Please try again.");
+    }
   }, []);
 
   if (loading) {
@@ -67,16 +88,17 @@ export default function Home() {
 
   return (
     <main className="flex h-screen w-screen relative overflow-hidden">
-      <Sidebar 
-        isOpen={isSidebarOpen} 
+      <Sidebar
+        isOpen={isSidebarOpen}
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
         radius={radius}
         setRadius={setRadius}
-      />      
-      <div 
+        onSearchSubmit={handleSearchSubmit}
+      />
+      <div
         className={`
           flex-grow transition-all duration-300 ease-in-out relative
-          ${isSidebarOpen ? 'ml-80' : 'ml-0'}
+          ${isSidebarOpen ? "ml-80" : "ml-0"}
         `}
       >
         {error && (

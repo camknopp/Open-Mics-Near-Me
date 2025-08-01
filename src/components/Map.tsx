@@ -1,5 +1,5 @@
 import { MapContainer, Marker, TileLayer, Circle, useMapEvents } from "react-leaflet"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import "leaflet/dist/leaflet.css"
 import "leaflet-defaulticon-compatibility"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
@@ -32,6 +32,16 @@ function LocationMarkerAndCircle({
       })    
     },
   })
+  
+  useEffect(() => {
+    setPosition(initialPosition);
+    if (map) {
+      map.flyTo(initialPosition, map.getZoom(), {
+        animate: true,
+        duration: 1 // Animation duration in seconds
+      });
+    }
+  }, [initialPosition, map]);
 
   // Convert miles to meters for Leaflet Circle component
   const radiusInMeters = radius * 1609.34;
