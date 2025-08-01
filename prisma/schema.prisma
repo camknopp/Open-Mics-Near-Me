@@ -102,7 +102,8 @@ model OpenMic {
   id          String    @id @default(cuid())
   title       String    // e.g., "Acoustic Night", "Comedy Open Mic"
   dayOfWeek   DayOfWeek[]
-  time        String    // e.g., "8:00 PM", "7:30 PM - 10:00 PM"
+  startTime   String      // e.g., "19:30"
+  endTime     String?      // e.g., "22:00"  
   hostName    String?
   hostWebsite String?
   description String?   @db.Text

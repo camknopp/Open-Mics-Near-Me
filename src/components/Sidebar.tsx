@@ -8,10 +8,10 @@ interface SidebarProps {
   radius: number;
   setRadius: (value: number) => void;
   onSearchSubmit: (query: string) => void;
-  onAddOpenMic: () => void;
+  onOpenMicForm: () => void;
 }
 
-const Sidebar = ({ isOpen, onToggle, radius, setRadius, onSearchSubmit, onAddOpenMic }: SidebarProps) => {
+const Sidebar = ({ isOpen, onToggle, radius, setRadius, onSearchSubmit, onOpenMicForm: onAddOpenMic }: SidebarProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchSubmit = (e: React.FormEvent) => {

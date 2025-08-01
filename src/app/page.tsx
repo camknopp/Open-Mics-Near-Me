@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
+import AddOpenMicForm from "@/components/AddOpenMicForm"
 
 const LazyMap = dynamic(() => import("@/components/Map"), {
   ssr: false,
@@ -15,6 +16,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [showOpenMicForm, setShowOpenMicForm] = useState(false);
   const [radius, setRadius] = useState(2);
   const zoom = 13;
 
@@ -87,6 +89,7 @@ export default function Home() {
     // This function will be called when the button is clicked.
     // The 'position' state from Home.tsx holds the current marker location.
     console.log("Add open mic button clicked at:", position);
+    setShowOpenMicForm(true)
     // Add more logic here later, like opening a form.
   };
 
@@ -106,7 +109,13 @@ export default function Home() {
         radius={radius}
         setRadius={setRadius}
         onSearchSubmit={handleSearchSubmit}
-        onAddOpenMic={handleAddOpenMic}
+        onOpenMicForm={handleAddOpenMic}
+      />
+      <AddOpenMicForm
+        isShowing={showOpenMicForm}
+        onClose={() => setShowOpenMicForm(false)}
+        latitude={position[0]}
+        longitude={position[1]}
       />
       <div
         className={`
