@@ -13,3 +13,110 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Genre {
+  ACOUSTIC
+  COMEDY
+  JAZZ
+  BLUES
+  POETRY
+  ROCK
+  RAP
+  JAM
+  ANY
+}
+
+enum DayOfWeek {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  openMics      OpenMic[] // User can host multiple open mics
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Venue {
+  id        String    @id @default(cuid())
+  name      String
+  address   String
+  latitude  Float
+  longitude Float
+  facebook  String?   // Optional Facebook page URL
+  instagram String?   // Optional Instagram page URL
+  website   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  openMics  OpenMic[]
+}
+
+model OpenMic {
+  id          String    @id @default(cuid())
+  title       String    // e.g., "Acoustic Night", "Comedy Open Mic"
+  dayOfWeek   DayOfWeek[]
+  time        String    // e.g., "8:00 PM", "7:30 PM - 10:00 PM"
+  hostName    String?
+  hostWebsite String?
+  description String?   @db.Text
+  genre       Genre[]  // e.g., "Acoustic", "Folk", "Comedy", "Spoken Word"
+  equipment   String?   // e.g., "PA, 2 Mics", "Full Backline"
+  signupMethod String?  // e.g., "At Door", "Online Pre-signup"
+  rules       String?   @db.Text // e.g., "3 song max", "5 min limit"
+  isVerified  Boolean   @default(false) // For moderation
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  venueId String
+  venue   Venue   @relation(fields: [venueId], references: [id])
+
+  creatorId String? // Optional: Link to a User if the creator is a registered user
+  creator    User?   @relation(fields: [creatorId], references: [id])
+}

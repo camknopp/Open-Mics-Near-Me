@@ -59,13 +59,18 @@ export default function Home() {
   const handleSearchSubmit = useCallback(async (query: string) => {
     setError(null);
     try {
-      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+        query
+      )}&format=json&limit=1`;
       const response = await fetch(url);
       const data = await response.json();
-      
+
       if (data && data.length > 0) {
         const { lat, lon } = data[0];
-        const newPosition: [number, number] = [parseFloat(lat), parseFloat(lon)];
+        const newPosition: [number, number] = [
+          parseFloat(lat),
+          parseFloat(lon),
+        ];
         setPosition(newPosition);
         // Do not update the `initialPosition` prop of the map here.
         // Instead, the `LocationMarkerAndCircle` component should react to the `position` state.
@@ -77,6 +82,13 @@ export default function Home() {
       setError("Failed to get location from search. Please try again.");
     }
   }, []);
+
+  const handleAddOpenMic = () => {
+    // This function will be called when the button is clicked.
+    // The 'position' state from Home.tsx holds the current marker location.
+    console.log("Add open mic button clicked at:", position);
+    // Add more logic here later, like opening a form.
+  };
 
   if (loading) {
     return (
@@ -94,6 +106,7 @@ export default function Home() {
         radius={radius}
         setRadius={setRadius}
         onSearchSubmit={handleSearchSubmit}
+        onAddOpenMic={handleAddOpenMic}
       />
       <div
         className={`

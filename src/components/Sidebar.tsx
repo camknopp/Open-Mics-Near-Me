@@ -8,9 +8,10 @@ interface SidebarProps {
   radius: number;
   setRadius: (value: number) => void;
   onSearchSubmit: (query: string) => void;
+  onAddOpenMic: () => void;
 }
 
-const Sidebar = ({ isOpen, onToggle, radius, setRadius, onSearchSubmit }: SidebarProps) => {
+const Sidebar = ({ isOpen, onToggle, radius, setRadius, onSearchSubmit, onAddOpenMic }: SidebarProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -79,11 +80,21 @@ const Sidebar = ({ isOpen, onToggle, radius, setRadius, onSearchSubmit }: Sideba
             id="radius-slider"
             type="range"
             min="1"
-            max="50"
+            max="25"
             value={radius}
             onChange={(e) => setRadius(parseInt(e.target.value, 10))}
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
+        </div>
+
+         {/* Button to add an open mic */}
+        <div className="mb-6">
+          <button
+            onClick={onAddOpenMic}
+            className="w-full bg-green-500 text-white p-2 rounded-md font-semibold cursor-pointer hover:bg-green-600 transition-colors"
+          >
+            + Add Open Mic Here
+          </button>
         </div>
 
         {/* List of open mics (placeholder) */}
