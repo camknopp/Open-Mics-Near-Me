@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen, onToggle, radius, setRadius }: SidebarProps) => {
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
-        <h2 className="mb-6 text-xl font-bold">Open Mic Search</h2>
+        <h2 className="mb-6 text-xl font-bold">Open Mics Near Me</h2>
         
         {/* Search bar section */}
         <div className="mb-6">
@@ -56,7 +56,7 @@ const Sidebar = ({ isOpen, onToggle, radius, setRadius }: SidebarProps) => {
             id="radius-slider"
             type="range"
             min="1"
-            max="100"
+            max="50"
             value={radius}
             onChange={(e) => setRadius(parseInt(e.target.value, 10))}
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
